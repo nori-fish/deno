@@ -8,7 +8,7 @@ function _deno_install --on-event deno_install --on-event deno_update
 
     set --query DENO_INSTALL
     or set --universal --export DENO_INSTALL $HOME/.deno
-    _nori_add_path $DENO_INSTALL/bin
+    fish_add_path --prepend $DENO_INSTALL/bin
 end
 
 function _deno_uninstall --on-event deno_uninstall
@@ -16,5 +16,8 @@ function _deno_uninstall --on-event deno_uninstall
         rm -rf $DENO_INSTALL
         set --universal --erase DENO_INSTALL
     end
-    _nori_remove_path $DENO_INSTALL/bin
+
+    if set --local index (contains --index $DENO_INSTALL/bin $fish_user_paths)
+        set --universal --erase fish_user_paths[$index]
+    end
 end
